@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3 AM Incident Commander</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="kicker">CALL-E · failure cases · real calls</p>
+        <h1>3 AM Incident Commander</h1>
+      </div>
+      <div id="health" class="health">checking AWS…</div>
+    </header>
+
+    <section class="controls">
+      <p class="hint">
+        Pick a failure case. CALL-E places a real call. You speak the runbook line (shown after the incident opens, including the confirmation phrase). The recorded fix is a real AWS command.
+      </p>
+    </section>
+    <section>
+      <div id="scenarios" class="scenarios"></div>
+    </section>
+
+    <main>
+      <aside>
+        <h2>Incidents</h2>
+        <ul id="list"></ul>
+      </aside>
+      <article id="detail">
+        <p class="empty">Select an incident or page on-call.</p>
+      </article>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
