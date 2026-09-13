@@ -67,6 +67,7 @@ export function createEngine(config: AppConfig) {
       id: randomUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      version: 0,
       status: "gathering",
       source: input.source,
       triggerReason: scenario?.summary ?? input.triggerReason,
@@ -87,7 +88,9 @@ export function createEngine(config: AppConfig) {
       sayOnPhone: scenario ? scenario.sayOnPhone.replace("{code}", "the confirmation phrase") : null,
       recommended: scenario?.recommended ?? null,
       fixCommand: scenario?.fixCommand ?? null,
-      audit: []
+      audit: [],
+      attempts: 0,
+      timeoutAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
     };
     audit(incident, "opened", `${input.source}: ${incident.triggerReason}`);
     await saveIncident(incident);
@@ -170,6 +173,14 @@ export function createEngine(config: AppConfig) {
         setTimeout(() => {
           void getIncident(id).then((incident) => {
             if (!incident || incident.execution) return;
+            if (new Date() > new Date(incident.timeoutAt)) {
+              void patch(id, (item) => {
+                item.status = "timeout";
+                item.error = "Incident timed out after 15 minutes";
+                audit(item, "timeout", "Global 15-minute timeout reached");
+              });
+              return;
+            }
             const callId =
               kind === "result"
                 ? incident.resultCallId
@@ -246,14 +257,54 @@ export function createEngine(config: AppConfig) {
     }
 
     if (!human || spoken.decision === "unknown") {
-      return patch(id, (item) => {
+      const updated = await patch(id, (item) => {
         item.spoken = spoken;
         item.transcript = transcript;
         item.evidence = evidence;
-        item.status = "no_answer";
+        item.attempts = (item.attempts || 0) + 1;
         item.error = "CALL-E did not capture an authorized human decision";
-        audit(item, "calle.no_decision", "No usable spoken decision");
+        
+        if (item.attempts < 2) {
+          audit(item, "calle.retry", "No usable spoken decision. Retrying in 2 minutes.");
+        } else {
+          item.status = "no_answer";
+          audit(item, "calle.no_decision", "Max retries reached. No usable spoken decision.");
+        }
       });
+      
+      if (updated.attempts < 2) {
+        setTimeout(() => {
+          void placeCall({
+            config,
+            to: config.ONCALL_PHONE!,
+            task: buildBriefing({
+              snapshot: updated.snapshot!,
+              confirmationCode: updated.confirmationCode,
+              triggerReason: updated.triggerReason,
+              source: updated.source,
+              recommended: updated.recommended,
+              sayOnPhone: updated.sayOnPhone,
+              fixCommand: updated.fixCommand
+            }),
+            incidentId: id,
+            kind: "page",
+            webhookUrl: webhookUrl()
+          }).then(async (call) => {
+            const calleCallId = callIdOf(call);
+            await patch(id, (item) => {
+              item.calleCallId = calleCallId;
+              item.status = "in_call";
+              audit(item, "calle.placed", `Retry Outbound CALL-E page ${calleCallId}`);
+            });
+            watchCall(id, calleCallId, "page");
+          });
+        }, 120000); // 2 minutes
+        return updated;
+      } else {
+        // Automatically escalate on max retries
+        spoken.decision = "escalate";
+        spoken.notes = "Auto-escalated due to no human response after retries.";
+      }
     }
 
     await patch(id, (item) => {

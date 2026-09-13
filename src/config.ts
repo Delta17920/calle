@@ -28,7 +28,8 @@ const envSchema = z.object({
     .enum(["true", "false"])
     .default("true")
     .transform((v) => v === "true"),
-  MAX_DESIRED_COUNT: z.coerce.number().int().positive().default(20)
+  MAX_DESIRED_COUNT: z.coerce.number().int().positive().default(20),
+  DYNAMODB_TABLE_NAME: z.string().default("incident-commander-state")
 });
 
 export type AppConfig = z.infer<typeof envSchema>;

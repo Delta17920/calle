@@ -9,6 +9,7 @@ export type IncidentStatus =
   | "resolved"
   | "escalated"
   | "failed"
+  | "timeout"
   | "no_answer";
 
 export type SpokenDecision = {
@@ -78,6 +79,7 @@ export type Incident = {
   id: string;
   createdAt: string;
   updatedAt: string;
+  version: number;
   status: IncidentStatus;
   source: string;
   triggerReason: string;
@@ -99,6 +101,8 @@ export type Incident = {
   recommended: Decision | null;
   fixCommand: string | null;
   audit: AuditEvent[];
+  attempts: number;
+  timeoutAt: string;
 };
 
 export type CreateIncidentInput = {

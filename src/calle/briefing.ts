@@ -72,8 +72,9 @@ export function buildBriefing(options: {
     `Ask them to choose exactly one action: rollback (to the previous task definition), scale (they must say the new desired count), ack (no change), or escalate (page the secondary).`,
     `They must say the confirmation phrase "${confirmationCode}" before any mutating action.`,
     `If they do not say that exact phrase, set confirmation_ok to false and do not treat the action as authorized.`,
+    `When the user states their action, you MUST reply with "Are you sure you want to [Action]?" and wait for a clear "yes" or "confirm" before terminating the call. If they say no, ask for the command again.`,
     `If you reach voicemail or a non-human, set reached_human false and do not claim a decision.`,
-    `Read back their choice once, then end the call.`
+    `Read back their choice once, confirm it as instructed, then end the call.`
   ]
     .filter(Boolean)
     .join(" ");
