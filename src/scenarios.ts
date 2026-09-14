@@ -43,7 +43,7 @@ function base(partial: Partial<AwsSnapshot> & Pick<AwsSnapshot, "service" | "clu
 export const FAILURE_SCENARIOS: FailureScenario[] = [
   {
     id: "bad-deploy-5xx",
-    title: "Bad deploy — checkout 5xx",
+    title: "Bad deploy - checkout 5xx",
     summary: "checkout-api task:8 started 02:41 SGT. 5xx jumped to 11%. Last healthy was task:7.",
     symptoms: ["ALB 5xx 148 in 15m", "Unhealthy targets 3/4", "Deploy checkout-api:8 at 02:41"],
     recommended: "rollback",
@@ -104,7 +104,7 @@ export const FAILURE_SCENARIOS: FailureScenario[] = [
   },
   {
     id: "cpu-saturation",
-    title: "CPU saturation — flash sale",
+    title: "CPU saturation - flash sale",
     summary: "CPU 94% for 12 minutes. Tasks healthy but latency p99 is 4.8s. Need more capacity, not a rollback.",
     symptoms: ["CPU 94%", "p99 4.8s", "5xx low (12)", "Current revision otherwise healthy"],
     recommended: "scale",
@@ -252,7 +252,7 @@ export const FAILURE_SCENARIOS: FailureScenario[] = [
   },
   {
     id: "false-alarm-ack",
-    title: "Flapping alarm — no user impact",
+    title: "Flapping alarm - no user impact",
     summary: "Alarm flapped once. p99 and 5xx are normal. Correct move is ack, not a change.",
     symptoms: ["5xx 2", "CPU 18%", "Unhealthy 0", "One brief ALARM then recovering"],
     recommended: "ack",
