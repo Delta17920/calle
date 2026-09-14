@@ -1,0 +1,70 @@
+[
+  {
+    "id": "example-scale",
+    "title": "What happened: scale four",
+    "status": "resolved",
+    "scenarioId": "easy-scale",
+    "triggerReason": "Checkout desired count dropped to 0. No tasks running. Site was dark.",
+    "confirmationCode": "GO",
+    "sayOnPhone": "Scale four. Confirm go.",
+    "calleCallId": "call_demo_scale_001",
+    "spoken": {
+      "decision": "scale",
+      "scaleTo": 4,
+      "confirmationOk": true,
+      "notes": "On-call said scale four and confirm go."
+    },
+    "execution": {
+      "ok": true,
+      "action": "scale",
+      "command": "aws ecs update-service --cluster prod --service checkout-api --desired-count 4",
+      "output": "Runbook applied. Live ECS write was not used on this machine."
+    },
+    "transcript": [
+      { "speaker": "bot", "text": "This is Incident Commander. Checkout has zero running tasks. Desired count is zero. The site is down." },
+      { "speaker": "bot", "text": "Recommended action is scale to four. You can say: scale four, confirm go." },
+      { "speaker": "user", "text": "Scale four. Confirm go." },
+      { "speaker": "bot", "text": "Got it. Scale desired count to four. Confirmed. I will apply the runbook and hang up." }
+    ],
+    "audit": [
+      "Opened from failure catalog: easy-scale",
+      "CALL-E outbound page placed",
+      "Spoken decision: scale 4, confirmation OK",
+      "Runbook: aws ecs update-service --desired-count 4"
+    ]
+  },
+  {
+    "id": "example-rollback",
+    "title": "What happened: rollback after bad deploy",
+    "status": "resolved",
+    "scenarioId": "bad-deploy-5xx",
+    "triggerReason": "checkout-api task 8 shipped at 02:41. 5xx jumped to 11 percent. Last healthy revision was task 7.",
+    "confirmationCode": "GO",
+    "sayOnPhone": "Rollback. Confirm go.",
+    "calleCallId": "call_demo_rollback_001",
+    "spoken": {
+      "decision": "rollback",
+      "scaleTo": null,
+      "confirmationOk": true,
+      "notes": "On-call said rollback and confirm go."
+    },
+    "execution": {
+      "ok": true,
+      "action": "rollback",
+      "command": "aws ecs update-service --cluster prod --service checkout-api --task-definition checkout-api:7 --force-new-deployment",
+      "output": "Runbook applied. Live ECS write was not used on this machine."
+    },
+    "transcript": [
+      { "speaker": "bot", "text": "This is Incident Commander. Checkout is returning 5xx after deploy revision 8." },
+      { "speaker": "bot", "text": "Last healthy revision is 7. Recommended action is rollback. You can say: rollback, confirm go." },
+      { "speaker": "user", "text": "Rollback. Confirm go." },
+      { "speaker": "bot", "text": "Rollback to task definition 7 is confirmed. Applying the runbook now." }
+    ],
+    "audit": [
+      "Opened from failure catalog: bad-deploy-5xx",
+      "CALL-E outbound page placed",
+      "Spoken decision: rollback, confirmation OK",
+      "Runbook: force new deployment on checkout-api:7"
+    ]
+  }
+]

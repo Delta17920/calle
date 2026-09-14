@@ -29,7 +29,50 @@ header { display: flex; justify-content: space-between; align-items: center; max
 
 .hero { max-width: 1200px; margin: 64px auto 0; }
 .hero h1 { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 24px; color: #000; }
-.hero p.hint { font-size: 20px; color: var(--text-muted); max-width: 650px; line-height: 1.5; margin-bottom: 40px; font-weight: 400; }
+.hero p.hint { font-size: 20px; color: var(--text-muted); max-width: 650px; line-height: 1.5; margin-bottom: 24px; font-weight: 400; }
+
+.local-note {
+  max-width: 720px;
+  background: #111;
+  color: #fff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 40px;
+}
+.local-note code {
+  background: rgba(255,255,255,0.12);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.92em;
+}
+
+.cases-title, .examples-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+.examples-lead { color: var(--text-muted); margin: -8px 0 24px; font-size: 16px; }
+
+.examples {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.example-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.example-card.active { outline: 3px solid #111; }
 
 .scenarios { display: flex; gap: 16px; flex-wrap: wrap; }
 .scenario { background: #111111; color: #ffffff; border: none; border-radius: 100px; padding: 14px 24px; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; gap: 10px; }
@@ -40,7 +83,7 @@ header { display: flex; justify-content: space-between; align-items: center; max
 .dashboard-wrapper { background: var(--green-gradient); padding: 0 48px 64px; display: flex; justify-content: center; position: relative; }
 .dashboard-wrapper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); pointer-events: none; }
 
-.dashboard { width: 100%; max-width: 1200px; background: var(--main-bg); border-radius: 24px; box-shadow: 0 32px 64px rgba(0,0,0,0.15); display: flex; overflow: hidden; position: relative; z-index: 1; min-height: 700px; margin-top: -32px; border: 1px solid rgba(0,0,0,0.05); }
+.dashboard-wrapper { background: var(--green-gradient); padding: 0 48px 64px; display: flex; justify-content: center; position: relative; }
 
 .sidebar { width: 300px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 32px 24px; flex-shrink: 0; display: flex; flex-direction: column; }
 .sidebar-header { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 600; margin-bottom: 48px; letter-spacing: -0.02em; }
